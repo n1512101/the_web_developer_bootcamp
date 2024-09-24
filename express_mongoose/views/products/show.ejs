@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= product.name %></title>
+</head>
+<body>
+  <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+  <h1><%= product.name %></h1>
+  <ul>
+    <li>価格：<%= product.price %></li>
+    <li>カテゴリー：<a href="/products?category=<%= product.category %>"><%= product.category %></a></li>
+  </ul>
+  <a href="/products">商品一覧</a>
+  <a href="/products/<%= product._id %>/edit">編集</a>
+  <button>削除</button>
+  <script>
+    const button = document.querySelector('button')
+    button.addEventListener('click', async (ev) => {
+      ev.preventDefault()
+      await axios.delete('/products/<%= product._id %>')
+            .then(() => location.href = '/products')
+    })
+  </script>
+</body>
+</html>
