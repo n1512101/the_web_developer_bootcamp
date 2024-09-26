@@ -14,6 +14,10 @@ const productSchema = new Schema({
   category: {
     type: String,
     enum: ['果物', '野菜', '乳製品']
+  },
+  farm: {
+    type: Schema.Types.ObjectId,
+    ref: 'Farm'
   }
 })
 
