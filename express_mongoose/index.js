@@ -3,6 +3,8 @@ const path = require('path')
 const mongoose = require('mongoose')
 const Product = require('./models/product')
 const Farm = require('./models/farm')
+const session = require('express-session')
+const flash = require('connect-flash')
 
 mongoose.connect('mongodb://localhost:27017/farmStandTake2')
   .then(() => {
@@ -13,10 +15,18 @@ mongoose.connect('mongodb://localhost:27017/farmStandTake2')
   })
 
 const app = express()
+const sessionOptions = {secret: 'mysecret', resave: false, saveUninitialized: false}
+app.use(session(sessionOptions))
+app.use(flash())
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+  res.locals.messages = req.flash('success')
+  next()
+})
 
 const categories = ['果物', '野菜', '乳製品']
 
@@ -33,6 +43,7 @@ app.get('/farms/new', (req, res) => {
 app.post('/farms', async (req, res) => {
   const farm = new Farm(req.body)
   await farm.save()
+  req.flash('success', '新しい農場を登録しました')
   res.redirect('/farms')
 })
 
